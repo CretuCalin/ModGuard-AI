@@ -51,7 +51,7 @@ class ModGuardStack(Stack):
         # Create a CloudFront distribution
         distribution = cloudfront.Distribution(self, "CloudFrontDistribution",
                                                default_behavior={
-                                                   "origin": origins.S3Origin(bucket),
+                                                   "origin": origins.S3StaticWebsiteOrigin(bucket),
                                                    "viewer_protocol_policy": cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
                                                },
                                                default_root_object="index.html")
