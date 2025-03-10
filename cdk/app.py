@@ -1,7 +1,7 @@
-from aws_cdk import core
-from chat_app_stack import ChatAppStack
+import aws_cdk as cdk
+from chat_app_stack import ModGuardStack
 
-app = core.App()
-ChatAppStack(app, "ChatAppStack")
+app = cdk.App()
+ModGuardStack(app, "ModGuardStack")
 
 app.synth()

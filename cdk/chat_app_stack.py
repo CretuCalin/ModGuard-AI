@@ -1,5 +1,3 @@
-chat-app/cdk/chat_app_stack.py
-
 from aws_cdk import (
     Stack,
     aws_s3 as s3,
@@ -9,13 +7,13 @@ from aws_cdk import (
 )
 from constructs import Construct
 
-class ChatAppStack(Stack):
+class ModGuardStack(Stack):
 
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         # Create S3 bucket for hosting frontend
-        bucket = s3.Bucket(self, "ChatAppBucket",
+        bucket = s3.Bucket(self, "ModGuardBucket",
                            website_index_document="index.html",
                            public_read_access=True)
 
@@ -36,8 +34,8 @@ class ChatAppStack(Stack):
         ))
 
         # Create API Gateway to route requests to Lambda function
-        api = apigateway.RestApi(self, "ChatAppApi",
-                                 rest_api_name="ChatApp Service")
+        api = apigateway.RestApi(self, "ModGuardApi",
+                                 rest_api_name="ModGuard Service")
 
         moderation_integration = apigateway.LambdaIntegration(moderation_function)
         api.root.add_method("POST", moderation_integration)
