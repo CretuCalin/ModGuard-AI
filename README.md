@@ -23,7 +23,17 @@
         sudo npm install -g aws-cdk
         ```
 
-3. **CDK Deployment**:
+3. **Configure AWS CLI**:
+    - Install AWS CLI (if not already installed):
+        ```sh
+        pip install awscli
+        ```
+    - Configure AWS CLI with your credentials:
+        ```sh
+        aws configure
+        ```
+
+4. **CDK Deployment**:
     - Navigate to the `cdk` directory:
         ```sh
         cd cdk
@@ -41,7 +51,7 @@
         cdk deploy
         ```
 
-4. **Lambda Function**:
+5. **Lambda Function**:
     - Navigate to the `lambda` directory:
         ```sh
         cd lambda
@@ -52,7 +62,7 @@
         ```
     - Zip the contents and upload to the Lambda function created by CDK.
 
-5. **Frontend**:
+6. **Frontend**:
     - Navigate to the `frontend` directory:
         ```sh
         cd frontend
