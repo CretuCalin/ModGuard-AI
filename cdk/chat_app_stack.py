@@ -4,6 +4,7 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigateway as apigateway,
     aws_iam as iam,
+    RemovalPolicy
 )
 from constructs import Construct
 
@@ -14,7 +15,11 @@ class ModGuardStack(Stack):
 
         # Create S3 bucket for hosting frontend
         bucket = s3.Bucket(self, "ModGuardBucket",
+                           versioned=True,
+                           # This is useful for development and testing environments but should be used with caution in production.
+                           removal_policy=RemovalPolicy.DESTROY,
                            website_index_document="index.html",
+                           block_public_access=s3.BlockPublicAccess.BLOCK_ACLS,
                            public_read_access=True)
 
         # Create Lambda function for moderation
