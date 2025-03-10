@@ -4,7 +4,10 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigateway as apigateway,
     aws_iam as iam,
-    RemovalPolicy
+    aws_cloudfront as cloudfront,
+    aws_cloudfront_origins as origins,
+    aws_s3_deployment as s3_deployment,
+    RemovalPolicy,
 )
 from constructs import Construct
 
@@ -44,3 +47,18 @@ class ModGuardStack(Stack):
 
         moderation_integration = apigateway.LambdaIntegration(moderation_function)
         api.root.add_method("POST", moderation_integration)
+
+        # Create a CloudFront distribution
+        distribution = cloudfront.Distribution(self, "CloudFrontDistribution",
+                                               default_behavior={
+                                                   "origin": origins.S3Origin(bucket),
+                                                   "viewer_protocol_policy": cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
+                                               },
+                                               default_root_object="index.html")
+        
+            # Upload frontend files to the S3 bucket
+        s3_deployment.BucketDeployment(self, "DeployFrontend",
+                                                sources=[s3_deployment.Source.asset("../frontend")],
+                                                destination_bucket=bucket,
+                                                distribution=distribution,
+                                                distribution_paths=["/*"])
