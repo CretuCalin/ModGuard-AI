@@ -1,5 +1,3 @@
-/chat-app/frontend/app.js
-
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('chat-form');
     const messageInput = document.getElementById('message-input');
