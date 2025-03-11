@@ -70,10 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateModerationChecks(result) {
         moderationChecks.cyberbullying.className = result.cyberbullying ? 'red' : 'green';
-        moderationChecks.ageAppropriate.className = result.ageAppropriate ? 'red' : 'green';
+        moderationChecks.notAgeAppropriate.className = result.notAgeAppropriate ? 'red' : 'green';
         moderationChecks.personalInfo.className = result.personalInfo ? 'red' : 'green';
         moderationChecks.strangerDanger.className = result.strangerDanger ? 'red' : 'green';
         moderationChecks.languageFilter.className = result.languageFilter ? 'red' : 'green';
-        moderationChecks.positiveCommunication.className = result.positiveCommunication ? 'red' : 'green';
+        moderationChecks.negativeCommunication.className = result.negativeCommunication ? 'red' : 'green';
     }
 });
