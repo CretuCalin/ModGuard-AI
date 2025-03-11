@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
         positiveCommunication: document.getElementById('positive-communication')
     };
 
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems);
+
     if (!form || !messageInput || !chatDisplay) {
         console.error('Required elements are missing in the DOM');
         return;
@@ -19,6 +22,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
+
+        document.getElementById('chat-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const spinner = document.getElementById('loading-spinner');
+            spinner.style.display = 'block';
+        
+            // Simulate a moderation response delay
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                // Handle the moderation response here
+            }, 2000); // Replace with actual moderation response handling
+        });
+
         const message = messageInput.value.trim();
         if (message === '') return;
 

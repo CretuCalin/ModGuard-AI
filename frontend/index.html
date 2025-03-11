@@ -9,20 +9,16 @@
     <style>
         .moderation-check {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 10px;
             margin-top: 20px;
         }
         .moderation-check .item {
-            flex: 1 1 calc(50% - 10px);
+            flex: 1 1 calc(33.33% - 10px);
             padding: 10px;
             border-radius: 5px;
             text-align: center;
-        }
-        .moderation-check .col {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            box-sizing: border-box;
         }
         .green {
             background-color: #a5d6a7;
@@ -56,6 +52,20 @@
             padding: 10px;
             border-bottom: 1px solid #e0e0e0;
         }
+        .spinner {
+            display: none;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -74,13 +84,14 @@
             </form>
         </div>
         <div class="moderation-check">
-            <div id="cyberbullying" class="item green">Cyberbullying Prevention</div>
-            <div id="age-appropriate" class="item green">Age-Appropriate Content</div>
-            <div id="personal-info" class="item green">Personal Information Protection</div>
-            <div id="stranger-danger" class="item green">Stranger Danger and Grooming Detection</div>
-            <div id="language-filter" class="item green">Language Filtering and Profanity Control</div>
-            <div id="positive-communication" class="item green">Encouraging Positive Communication</div>
+            <div id="cyberbullying" class="item green tooltipped" data-position="top" data-tooltip="Monitoring and addressing any form of bullying, harassment, or mean behavior between children">Cyberbullying Prevention</div>
+            <div id="age-appropriate" class="item green tooltipped" data-position="top" data-tooltip="Preventing discussions or content that might be too advanced or inappropriate for their age group">Age-Appropriate Content</div>
+            <div id="personal-info" class="item green tooltipped" data-position="top" data-tooltip="Blocking or flagging attempts to share personal details like full names, addresses, phone numbers, or school information">Personal Information Protection</div>
+            <div id="stranger-danger" class="item green tooltipped" data-position="top" data-tooltip="Preventing inappropriate contact from adults or strangers who might seek to manipulate or harm children">Stranger Danger and Grooming Detection</div>
+            <div id="language-filter" class="item green tooltipped" data-position="top" data-tooltip="Automatically filtering and blocking inappropriate language, profanity, or offensive terms">Language Filtering and Profanity Control</div>
+            <div id="positive-communication" class="item green tooltipped" data-position="top" data-tooltip="Promoting kindness, empathy, and respectful interactions between children.">Encouraging Positive Communication</div>
         </div>
+        <div class="spinner" id="loading-spinner"></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="app.js"></script>
