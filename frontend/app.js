@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             console.log(request_params);
-            const response = await fetch('https://movvgsbtq5.execute-api.eu-west-1.amazonaws.com/prod/moderation', request_params);
+            const response = await fetch('https://modguard_demo_app.ai/prod/moderation', request_params);
             if (response.ok) {
                 const result = await response.json();
                 // Update moderation checks

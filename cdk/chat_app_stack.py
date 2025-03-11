@@ -8,7 +8,10 @@ from aws_cdk import (
     aws_cloudfront_origins as origins,
     aws_s3_deployment as s3_deployment,
     RemovalPolicy,
-    Duration
+    Duration,
+    aws_route53 as route53,
+    aws_route53_targets as targets,
+    aws_certificatemanager as certificatemanager
 )
 import aws_cdk
 from constructs import Construct
@@ -108,5 +111,26 @@ class ModGuardStack(Stack):
                                        distribution=distribution,
                                        distribution_paths=["/*"])
         
+        # Create a hosted zone
+        domain_name = "modguard-demo-app.ai"
+        hosted_zone = route53.HostedZone(self, "HostedZone",
+                                         zone_name=domain_name,
+                                         comment="Hosted zone for ModGuard demo app")
+
+        # Optionally, you can add records to the hosted zone
+        route53.ARecord(self, "ARecord",
+                        zone=hosted_zone,
+                        target=route53.RecordTarget.from_ip_addresses("1.2.3.4"))
+        # Set up Route53 and custom domain for API Gateway
+
+        certificate = certificatemanager.Certificate(self, "Certificate", domain_name=domain_name, validation=certificatemanager.CertificateValidation.from_dns(hosted_zone))
+        
+        custom_domain = apigateway.DomainName(self, "CustomDomain", domain_name=domain_name, certificate=certificate)
+
+        apigateway.BasePathMapping(self, "BasePathMapping", domain_name=custom_domain, rest_api=api, base_path="prod")
+
+        route53.ARecord(self, "ApiAliasRecord", zone=hosted_zone, target=route53.RecordTarget.from_alias(targets.ApiGatewayDomain(custom_domain)))
+
+
         # Output API Gateway URL for the Lambda function
-        aws_cdk.CfnOutput(self, "BedrockApi", value=api.url)
+        aws_cdk.CfnOutput(self, "BedrockApi", value=f"https://{domain_name}/prod")
