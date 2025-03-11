@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('chat-form');
     const messageInput = document.getElementById('message-input');
     const chatDisplay = document.getElementById('chat-display');
+    const spinner = document.getElementById('loading-spinner');
 
     const moderationChecks = {
         cyberbullying: document.getElementById('cyberbullying'),
@@ -11,6 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
         languageFilter: document.getElementById('language-filter'),
         negativeCommunication: document.getElementById('positive-communication')
     };
+
+    function checkAcceptMessage(result){
+        if(result.cyberbullying || result.notAgeAppropriate || result.personalInfo || result.strangerDanger || result.languageFilter || result.negativeCommunication){
+            return false;
+        }
+        return true;
+    }
 
     var elems = document.querySelectorAll('.tooltipped');
     var instances = M.Tooltip.init(elems);
@@ -23,25 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        document.getElementById('chat-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const spinner = document.getElementById('loading-spinner');
-            spinner.style.display = 'block';
-        
-            // Simulate a moderation response delay
-            setTimeout(() => {
-                spinner.style.display = 'none';
-                // Handle the moderation response here
-            }, 2000); // Replace with actual moderation response handling
-        });
-
         const message = messageInput.value.trim();
+        messageInput.value = '';
+
         if (message === '') return;
 
-        // Display the message in the chat display
-        const messageElement = document.createElement('div');
-        messageElement.textContent = `You: ${message}`;
-        chatDisplay.appendChild(messageElement);
+         // Show the spinner
+         spinner.style.display = 'block';
 
         // Send the message to the backend for moderation
         try {
@@ -58,22 +54,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 const result = await response.json();
                 // Update moderation checks
                 updateModerationChecks(result);
+
+                const messageElement = document.createElement('div');
+                messageElement.style.padding = '10px';
+                messageElement.style.borderRadius = '10px';
+                messageElement.style.margin = '5px 0';
+                messageElement.style.color = 'white'; // Optional: to make the text readable                
+                
+                if (checkAcceptMessage(result)){
+                    // Display the message in the chat display with green color
+                    messageElement.textContent = `You: ${message}`;
+                    messageElement.style.backgroundColor = 'green';
+
+                } else {
+                    messageElement.textContent = `MESSAGE BLOCKED: ${message}`;
+                    messageElement.style.backgroundColor = 'red';
+                }
+                chatDisplay.appendChild(messageElement);
+
             } else {
                 console.error('Error:', response.statusText);
             }
 
         } catch (error) {
             console.error('Error during moderation:', error);
+        } finally {
+            // Hide the spinner
+            spinner.style.display = 'none';
         }
-        messageInput.value = '';
+        
     });
 
+    function updateClass(element, condition) {
+        if (condition) {
+            element.classList.remove('green');
+            element.classList.add('red');
+        } else {
+            element.classList.remove('red');
+            element.classList.add('green');
+        }
+    }
+
+
     function updateModerationChecks(result) {
-        moderationChecks.cyberbullying.className = result.cyberbullying ? 'red' : 'green';
-        moderationChecks.notAgeAppropriate.className = result.notAgeAppropriate ? 'red' : 'green';
-        moderationChecks.personalInfo.className = result.personalInfo ? 'red' : 'green';
-        moderationChecks.strangerDanger.className = result.strangerDanger ? 'red' : 'green';
-        moderationChecks.languageFilter.className = result.languageFilter ? 'red' : 'green';
-        moderationChecks.negativeCommunication.className = result.negativeCommunication ? 'red' : 'green';
+        updateClass(moderationChecks.cyberbullying, result.cyberbullying);
+        updateClass(moderationChecks.notAgeAppropriate, result.notAgeAppropriate);
+        updateClass(moderationChecks.personalInfo, result.personalInfo);
+        updateClass(moderationChecks.strangerDanger, result.strangerDanger);
+        updateClass(moderationChecks.languageFilter, result.languageFilter);
+        updateClass(moderationChecks.negativeCommunication, result.negativeCommunication);
     }
 });

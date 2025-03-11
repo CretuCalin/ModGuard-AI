@@ -32,7 +32,7 @@ def lambda_handler(event, context):
     print(message)
     
     retry = 0 # Number of current retries
-    max_retries = 3 # Maximum number of retries
+    max_retries = 5 # Maximum number of retries
 
     format_prompt = moderation_prompt.format(message=message)
 
@@ -60,9 +60,7 @@ def lambda_handler(event, context):
                 toolConfig={
                     "tools": tool_list,
                     "toolChoice": {"tool": {"name": "chat_moderation"}},
-                },
-                # accept="application/json",
-                # contentType="application/json"
+                }
             )
 
                         # Read the response stream and get the tool output
