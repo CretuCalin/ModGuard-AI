@@ -2,6 +2,7 @@ import json
 import boto3
 from system_string import moderation_sys_string
 from prompt import moderation_prompt
+from llm_tools import tool_list
 
 bedrock_client = boto3.client('bedrock-runtime', region_name="eu-west-1")
 model_id = "eu.anthropic.claude-3-5-sonnet-20240620-v1:0"
@@ -33,48 +34,47 @@ def lambda_handler(event, context):
     retry = 0 # Number of current retries
     max_retries = 3 # Maximum number of retries
 
+    format_prompt = moderation_prompt.format(message=message)
+
+    # Prepare Claude-specific request payload (Anthropic format)
+    messages = [{
+        "role": "user",
+        "content": [
+            {"text": moderation_sys_string},
+            {"text": f"<instructions>\n{format_prompt}\n</instructions>\n"},
+        ],
+    }]
+
     # Retry the moderation check if the service is unavailable
     while retry < max_retries:
 
         try:
             # Call the Bedrock service to check the message for moderation
-            response = bedrock_client.invoke_model(
+            response = bedrock_client.converse(
                 modelId=model_id,
-                body=json.dumps({
-                            "messages": [
-                    {
-                        "role": "system",
-                        "content": [{
-                            "type": "text",
-                            "text": moderation_sys_string
-                        }],
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": moderation_prompt.format(message=message)
-                            }
-                        ]
-                    }
-                ],
-                "max_tokens": 150,
-                "temperature": 0.3,
-                "anthropic_version": "bedrock-2023-05-31"
-                }),
-                accept="application/json",
-                contentType="application/json"
+                messages=messages,
+                inferenceConfig={
+                    "maxTokens": 1000,
+                    "temperature": 0.3,
+                },
+                toolConfig={
+                    "tools": tool_list,
+                    "toolChoice": {"tool": {"name": "chat_moderation"}},
+                },
+                # accept="application/json",
+                # contentType="application/json"
             )
 
-            # Read the response stream and decode it
-            response_body = json.loads(response['body'].read())
+                        # Read the response stream and get the tool output
+            response_message = response["output"]["message"]
+            response_content_blocks = response_message["content"]
+            content_block = next(
+                (block for block in response_content_blocks if "toolUse" in block), None
+            )
+            tool_use_block = content_block["toolUse"]
+            tool_result_dict = tool_use_block["input"]
 
-            # Claude models return `completion` in the result
-            completion = response_body['content'][0]['text']
-            print(completion)
-
-            response_json = json.loads(completion)
-
-            validate_moderation_response(response_json)
+            validate_moderation_response(tool_result_dict)
             
             # Return the moderation result
             return {
@@ -83,7 +83,7 @@ def lambda_handler(event, context):
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
                 },
-                'body': json.dumps(response_json)
+                'body': json.dumps(tool_result_dict)
             }
         except Exception as e:
             print(e)

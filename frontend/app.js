@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const moderationChecks = {
         cyberbullying: document.getElementById('cyberbullying'),
-        ageAppropriate: document.getElementById('age-appropriate'),
+        notAgeAppropriate: document.getElementById('age-appropriate'),
         personalInfo: document.getElementById('personal-info'),
         strangerDanger: document.getElementById('stranger-danger'),
         languageFilter: document.getElementById('language-filter'),
-        positiveCommunication: document.getElementById('positive-communication')
+        negativeCommunication: document.getElementById('positive-communication')
     };
 
     var elems = document.querySelectorAll('.tooltipped');
