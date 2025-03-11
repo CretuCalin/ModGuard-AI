@@ -45,21 +45,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Send the message to the backend for moderation
         try {
-            const response = await fetch('https://your-lambda-function-url', {
+            request_params = {
                 method: 'POST',
+                body: JSON.stringify({ message }),
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message })
-            });
-            const result = await response.json();
+                }
+            }
+            console.log(request_params);
+            const response = await fetch('https://movvgsbtq5.execute-api.eu-west-1.amazonaws.com/prod/moderation', request_params);
+            if (response.ok) {
+                const result = await response.json();
+                // Update moderation checks
+                updateModerationChecks(result);
+            } else {
+                console.error('Error:', response.statusText);
+            }
 
-            // Update moderation checks
-            updateModerationChecks(result);
         } catch (error) {
             console.error('Error during moderation:', error);
         }
-
         messageInput.value = '';
     });
 

@@ -3,23 +3,38 @@ import boto3
 
 def lambda_handler(event, context):
     # Extract the message from the event
-    message = event['body']['message']
+    # body = event['body']
+    # print(body)
+
+    # if type(body) == str:
+    #     body = json.loads(body)
+    # message = body['message']
+    # print(message)
     
-    # Initialize the Bedrock client
-    bedrock_client = boto3.client('bedrock')
+    # # Initialize the Bedrock client
+    # bedrock_client = boto3.client('bedrock')
     
-    # Call the Bedrock service to check the message for moderation
-    response = bedrock_client.check_message(
-        Text=message
-    )
+    # # Call the Bedrock service to check the message for moderation
+    # response = bedrock_client.check_message(
+    #     Text=message
+    # )
     
-    # Extract the moderation result
-    moderation_result = response['ModerationResult']
+    # # Extract the moderation result
+    # moderation_result = response['ModerationResult']
     
     # Return the moderation result
     return {
         'statusCode': 200,
+        'headers': {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+        },
         'body': json.dumps({
-            'moderation_result': moderation_result
+            'cyberbullying': True,
+            'ageAppropriate': False,
+            'personalInfo': True,
+            'strangerDanger': False,
+            'languageFilter': True,
+            'positiveCommunication': False,
         })
     }
