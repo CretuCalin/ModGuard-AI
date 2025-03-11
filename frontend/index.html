@@ -3,17 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Modern Chat Interface</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        .moderation-check {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .moderation-check div {
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .green {
+            background-color: #a5d6a7;
+        }
+        .red {
+            background-color: #ef9a9a;
+        }
+    </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div id="chat-box" class="chat-box"></div>
-        <form id="chat-form" class="chat-form">
-            <input type="text" id="message-input" class="message-input" placeholder="Type your message here..." required>
-            <button type="submit" class="send-button">Send</button>
-        </form>
+    <div class="container">
+        <h3 class="center-align">Chat Interface</h3>
+        <div class="row">
+            <form id="chat-form" class="col s12">
+                <div class="input-field col s12">
+                    <input id="message-input" type="text" class="validate">
+                    <label for="message-input">Type your message</label>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit">Send
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+        <div id="chat-display" class="card-panel grey lighten-5"></div>
+        <div class="moderation-check">
+            <div id="cyberbullying" class="green">Cyberbullying Prevention</div>
+            <div id="age-appropriate" class="green">Age-Appropriate Content</div>
+            <div id="personal-info" class="green">Personal Information Protection</div>
+            <div id="stranger-danger" class="green">Stranger Danger and Grooming Detection</div>
+            <div id="language-filter" class="green">Language Filtering and Profanity Control</div>
+            <div id="positive-communication" class="green">Encouraging Positive Communication</div>
+        </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
