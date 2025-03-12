@@ -4,6 +4,7 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigateway as apigateway,
     aws_iam as iam,
+    aws_cognito as cognito,
     RemovalPolicy,
     Duration,
 )
@@ -44,6 +45,46 @@ class ModGuardStackBackend(Stack):
         # Create API Gateway to route requests to Lambda function
         api = apigateway.RestApi(self, "ModGuardApi",
                                  rest_api_name="ModGuard Service")
+    
+        # Create a Cognito User Pool
+        user_pool = cognito.UserPool(
+            self, "UserPool",
+            user_pool_name="MogGuardUserPool",
+            sign_in_aliases=cognito.SignInAliases(email=True),  # Allow email sign-in
+            self_sign_up_enabled=True,  # Allow users to sign up on their own
+            auto_verify=cognito.AutoVerifiedAttrs(email=True),  # Automatically verify emails
+            standard_attributes={
+                "email": cognito.StandardAttribute(
+                    required=True,
+                    mutable=False
+                )
+            },
+            password_policy=cognito.PasswordPolicy(
+                min_length=6,
+                require_lowercase=False,
+                require_uppercase=False,
+                require_digits=False,
+                require_symbols=False
+            ),
+            account_recovery=cognito.AccountRecovery.EMAIL_ONLY,
+        )
+
+        # Create a User Pool Client (used by apps to interact with Cognito)
+        user_pool_client = cognito.UserPoolClient(
+            self, "UserPoolClient",
+            user_pool=user_pool,
+            generate_secret=False,  # Don't require a client secret (if using public clients like web apps)
+            auth_flows=cognito.AuthFlow(
+                user_password=True,  # Enable username & password authentication
+                user_srp=True,        # Enable SRP (Secure Remote Password) authentication flow
+            )
+        )
+
+        # Create Cognito Authorizer
+        cognito_authorizer = apigateway.CognitoUserPoolsAuthorizer(
+            self, "ModGuardCognitoAuthorizer",
+            cognito_user_pools=[user_pool]
+        )
         
         moderation_resource = api.root.add_resource("moderation")
 
@@ -54,7 +95,7 @@ class ModGuardStackBackend(Stack):
                                                                         status_code="200",
                                                                         response_parameters={
                                                                             "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                                                            "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
+                                                                            "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Autorization'",
                                                                             "method.response.header.Access-Control-Allow-Methods": "'POST'"
                                                                         }
                                                                     )])
@@ -68,13 +109,16 @@ class ModGuardStackBackend(Stack):
                     }
                 )
             ]
-        moderation_resource.add_method("POST", moderation_integration, method_responses=method_responses)
+        moderation_resource.add_method("POST", moderation_integration, 
+                                       method_responses=method_responses, 
+                                       authorization_type=apigateway.AuthorizationType.COGNITO,
+                                       authorizer=cognito_authorizer)
         moderation_resource.add_method("OPTIONS", 
                 apigateway.MockIntegration(
                 integration_responses=[apigateway.IntegrationResponse(
                     status_code="200",
                     response_parameters={
-                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
+                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
                         "method.response.header.Access-Control-Allow-Origin": "'*'",
                         "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
                     }
@@ -87,24 +131,7 @@ class ModGuardStackBackend(Stack):
             method_responses=method_responses
         )
 
-        # # Create a CloudFront distribution
-        # distribution = cloudfront.Distribution(self, "CloudFrontDistribution",
-        #                                        default_behavior={
-        #                                            "origin": origins.S3StaticWebsiteOrigin(bucket),
-        #                                            "viewer_protocol_policy": cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        #                                            "allowed_methods": cloudfront.AllowedMethods.ALLOW_ALL,
-        #                                            "cache_policy": cloudfront.CachePolicy.CACHING_DISABLED,
-        #                                            "response_headers_policy": cloudfront.ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS
-        #                                        },
-        #                                        default_root_object="index.html")
-        
-        # # Upload frontend files to the S3 bucket
-        # s3_deployment.BucketDeployment(self, "DeployFrontend",
-        #                                sources=[s3_deployment.Source.asset("../frontend")],
-        #                                destination_bucket=bucket,
-        #                                distribution=distribution,
-        #                                distribution_paths=["/*"])
-        
-
         # Output API Gateway URL for the Lambda function
         aws_cdk.CfnOutput(self, "BedrockApi", value=api.url)
+        aws_cdk.CfnOutput(self, "userPoolId", value=user_pool.user_pool_id)
+        aws_cdk.CfnOutput(self, "userPoolClientId", value=user_pool_client.user_pool_client_id)

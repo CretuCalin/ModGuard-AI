@@ -7,36 +7,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <style>
-        .moderation-check {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .moderation-check .item {
-            flex: 1 1 calc(33.33% - 10px);
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            box-sizing: border-box;
-        }
-        .green {
-            background-color: #a5d6a7;
-        }
-        .red {
-            background-color: #ef9a9a;
-        }
-        .input-field {
-            display: flex;
-            align-items: center;
-            margin-top: 0;
-        }
-        .input-field input {
-            flex: 1;
-        }
-        .input-field button {
-            margin-left: 10px;
-        }
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -46,54 +16,23 @@
             border-radius: 5px;
             padding: 10px;
         }
-        #chat-display {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .spinner {
-            display: none;
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid #3498db;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h3 class="center-align">ModGuard-AI</h3>
         <div class="chat-container">
-            <div id="chat-display" class="grey lighten-5"></div>
-            <form id="chat-form">
-                <div class="input-field">
-                    <input id="message-input" type="text" class="validate" autocomplete="off">
-                    <label for="message-input">Type your message</label>
-                    <button class="btn waves-effect waves-light" type="submit">Send
-                        <i class="material-icons right">send</i>
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="spinner" id="loading-spinner"></div>
-        <div class="moderation-check">
-            <div id="cyberbullying" class="item green tooltipped" data-position="top" data-tooltip="Monitoring and addressing any form of bullying, harassment, or mean behavior between children">Cyberbullying Prevention</div>
-            <div id="age-appropriate" class="item green tooltipped" data-position="top" data-tooltip="Preventing discussions or content that might be too advanced or inappropriate for their age group">Age-Inappropriate Content</div>
-            <div id="personal-info" class="item green tooltipped" data-position="top" data-tooltip="Blocking or flagging attempts to share personal details like full names, addresses, phone numbers, or school information">Personal Information Protection</div>
-            <div id="stranger-danger" class="item green tooltipped" data-position="top" data-tooltip="Preventing inappropriate contact from adults or strangers who might seek to manipulate or harm children">Stranger Danger and Grooming Detection</div>
-            <div id="language-filter" class="item green tooltipped" data-position="top" data-tooltip="Automatically filtering and blocking inappropriate language, profanity, or offensive terms">Language Filtering and Profanity Control</div>
-            <div id="positive-communication" class="item green tooltipped" data-position="top" data-tooltip="Not promoting kindness, empathy, and respectful interactions between children.">Encouraging Negative Communication</div>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <button class="btn waves-effect waves-light center-align" type="submit">Login</button>
+        </form>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="app.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@5.0.3/dist/amazon-cognito-identity.min.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>

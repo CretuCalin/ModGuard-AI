@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const messageInput = document.getElementById('message-input');
     const chatDisplay = document.getElementById('chat-display');
     const spinner = document.getElementById('loading-spinner');
+    const selector = document.getElementById('model-select');
+    const moderationChecksDiv = document.getElementById('moderation-div');
 
     const moderationChecks = {
         cyberbullying: document.getElementById('cyberbullying'),
@@ -55,16 +57,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (message === '') return;
 
-         // Show the spinner
-         spinner.style.display = 'block';
+        // Show the spinner
+        spinner.style.display = 'block';
+
+        const selectedModel = selector.value;
 
         // Send the message to the backend for moderation
         try {
+
+            const idToken = localStorage.getItem('idToken');
+            if (!idToken) {
+                throw new Error('User is not authenticated');
+            }
+
             request_params = {
                 method: 'POST',
-                body: JSON.stringify({ message }),
+                body: JSON.stringify({ 
+                    message: message,
+                    model_id: selectedModel
+                }),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken
                 }
             }
             console.log(request_params);
@@ -119,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function updateModerationChecks(result) {
+        moderationChecksDiv.style.display = 'flex';
         updateClass(moderationChecks.cyberbullying, result.cyberbullying);
         updateClass(moderationChecks.notAgeAppropriate, result.notAgeAppropriate);
         updateClass(moderationChecks.personalInfo, result.personalInfo);

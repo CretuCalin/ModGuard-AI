@@ -5,7 +5,6 @@ from prompt import moderation_prompt
 from llm_tools import tool_list
 
 bedrock_client = boto3.client('bedrock-runtime', region_name="eu-west-1")
-model_id = "eu.anthropic.claude-3-5-sonnet-20240620-v1:0"
 
 def validate_moderation_response(response):
     if "cyberbullying" not in response:
@@ -30,6 +29,8 @@ def lambda_handler(event, context):
         body = json.loads(body)
     message = body['message']
     print(message)
+
+    model_id = body['model_id']
     
     retry = 0 # Number of current retries
     max_retries = 5 # Maximum number of retries
