@@ -176,15 +176,33 @@ Before setting up this application, ensure you have the following:
 
 ## Future Improvements
 
-- **Implement Moderation through Amazon OpenSearch Service (former Elasticsearch)**: Use OpenSearch Service for real-time indexing and searching of chat messages, enabling faster and more cost-efficient moderation capabilities.
+### Operational Excellence
 
-- **Enhanced User Management with AWS Amplify**: Integrate AWS Amplify for a more streamlined user management experience, including user registration, authentication, and authorization.
+- **Setup CI/CD Pipeline:**
+  - Implement a CI/CD pipeline using AWS CodePipeline or GitHub Actions for automated testing and deployment, ensuring consistent and reliable application updates.
 
-- **Amazon Bedrock prompt caching**: Implement caching for LLM prompts to reduce latency and reduce costs.
+- **Setup CloudWatch Alarms:**
+  - Configure Amazon CloudWatch alarms to monitor application performance, resource utilization, and especially the LLM response time, enabling proactive issue detection and resolution.
 
-- **Setup CloudWatch Alarms**: Configure CloudWatch alarms to monitor application performance and resource utilization, and especially the LLM response time.
+### Security
 
-- **Setup CI/CD Pipeline**: Implement a CI/CD pipeline for automated testing and deployment of the application.
+- **Enhanced User Management with AWS Amplify:**
+  - Integrate AWS Amplify for a more streamlined user management experience, including user registration, authentication, and authorization, ensuring secure and scalable user management.
+
+### Reliability
+
+- **Implement Moderation through Amazon OpenSearch Service (former Elasticsearch):**
+  - Use Amazon OpenSearch Service for real-time indexing and searching of chat messages, enabling faster and more cost-efficient moderation capabilities, and improving the reliability of the moderation process.
+
+### Performance Efficiency
+
+- **Amazon Bedrock Prompt Caching:**
+  - Implement caching for LLM prompts to reduce latency and improve response times, enhancing the overall performance of the application.
+
+### Cost Optimization
+
+- **Amazon Bedrock Prompt Caching:**
+  - Implement caching for LLM prompts to reduce costs associated with repeated processing of the same prompts, optimizing the cost-efficiency of the application.
 
 ---
 
