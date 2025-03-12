@@ -1,12 +1,11 @@
-import os
 import aws_cdk as cdk
-from chat_app_stack import ModGuardStack
+from chat_app_stack_backend import ModGuardStackBackend
+from chat_app_stack_website import ModGuardStackWebsite
 
 app = cdk.App()
 
-# Specify the AWS account and region
-env = cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'), region=os.getenv('CDK_DEFAULT_REGION'))
+backend_stack = ModGuardStackBackend(app, "ModGuardStackBackend")
+website_stack = ModGuardStackWebsite(app, "ModGuardStackWebsite")
 
-ModGuardStack(app, "ModGuardStack", env=env)
 
 app.synth()

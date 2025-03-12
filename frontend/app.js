@@ -1,3 +1,22 @@
+const ApiUrl = "https://gqake4g4t6.execute-api.eu-west-1.amazonaws.com/prod/";
+
+function joinPaths(...paths) {
+    return paths
+        .map((part, index) => {
+            // Remove leading slashes from all but the first part
+            if (index > 0) {
+                part = part.replace(/^\/+/, '');
+            }
+            // Remove trailing slashes from all but the last part
+            if (index < paths.length - 1) {
+                part = part.replace(/\/+$/, '');
+            }
+            return part;
+        })
+        .join('/');
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('chat-form');
     const messageInput = document.getElementById('message-input');
@@ -49,7 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             console.log(request_params);
-            const response = await fetch('https://modguard_demo_app.ai/prod/moderation', request_params);
+
+            const moderationApiUrl = joinPaths(ApiUrl, '/moderation');
+
+            const response = await fetch(moderationApiUrl, request_params);
             if (response.ok) {
                 const result = await response.json();
                 // Update moderation checks
