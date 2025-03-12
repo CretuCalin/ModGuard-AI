@@ -158,35 +158,33 @@ Before setting up this application, ensure you have the following:
         ```
 ---
 
-## Usage
+## Design choices
 
-1. Access the frontend by navigating to the CloudFront distribution URL.
-2. Enter your input in the provided field and submit the request.
-3. The backend will process the request via the API Gateway and AWS Bedrock, and the response will be displayed on the frontend.
+- **Serverless Architecture with AWS Lambda:**
+  - **Alternative:** EC2 instances for running backend services.
+  - **Reason:** Lambda is cost-efficient as you only pay for the compute time you consume, and it scales automatically.
 
----
+- **Static Frontend Hosting with Amazon S3:**
+  - **Alternative:** Hosting on EC2 or using AWS Amplify.
+  - **Reason:** S3 is highly cost-effective for serving static content and integrates seamlessly with CloudFront for global delivery.
 
-## Security Considerations
-
-- **Authentication & Authorization:** Ensure that your API Gateway is secured using AWS Cognito or API keys.
-- **IAM Roles:** Use the principle of least privilege for all IAM roles associated with AWS services.
-- **API Rate Limiting:** Implement API rate limiting to prevent misuse or DDoS attacks.
-
----
-
-## Cost Optimization
-
-- **Lambda Function Timeout:** Set appropriate timeouts for your Lambda functions to avoid unnecessary costs.
-- **API Gateway Caching:** Enable caching to reduce the number of requests made to the Lambda function.
-- **S3 & CloudFront:** Use Amazon S3 Intelligent-Tiering for the frontend storage and ensure CloudFront distribution is optimized.
+- **User Authentication with Amazon Cognito:**
+  - **Alternative:** Implementing custom authentication or using third-party identity providers.
+  - **Reason:** Cognito provides a scalable and secure solution for user authentication without the need to manage user credentials directly.
 
 ---
 
-## Troubleshooting
+## Future Improvements
 
-- **Lambda Timeout Errors:** Ensure that the Lambda timeout setting is adequate for the model's response time.
-- **API Gateway Configuration:** Double-check API Gateway integration with Lambda and Bedrock to ensure proper routing of requests.
-- **CORS Issues:** If you encounter CORS errors, make sure CORS is enabled in the API Gateway settings.
+- **Implement Moderation through Amazon OpenSearch Service (former Elasticsearch)**: Use OpenSearch Service for real-time indexing and searching of chat messages, enabling faster and more cost-efficient moderation capabilities.
+
+- **Enhanced User Management with AWS Amplify**: Integrate AWS Amplify for a more streamlined user management experience, including user registration, authentication, and authorization.
+
+- **Amazon Bedrock prompt caching**: Implement caching for LLM prompts to reduce latency and reduce costs.
+
+- **Setup CloudWatch Alarms**: Configure CloudWatch alarms to monitor application performance and resource utilization, and especially the LLM response time.
+
+- **Setup CI/CD Pipeline**: Implement a CI/CD pipeline for automated testing and deployment of the application.
 
 ---
 
