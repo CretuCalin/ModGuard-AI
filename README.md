@@ -70,6 +70,25 @@ This application is a serverless chat interface that performs message moderation
 
 ---
 
+## User Flow
+
+1. An account is created by the administrator using AWS Cognito console.
+2. The user logs in to the chat interface using the credentials.
+
+![UserLoginForm](assets/login_form.png)
+
+3. The user enters a message in the chat interface and submits it. The message is sent to the backend for moderation. 
+
+![ChatInterface](assets/chat_interface.png)
+
+4. When a moderation category is matched, the message is flagged and blocked.
+
+![FlaggedMessage](assets/chat_interface_moderation.png)
+
+5. The user can change the LLM model used for moderation.
+
+![ChangeModel](assets/change_model.png)
+
 ## Prerequisites
 
 Before setting up this application, ensure you have the following:
