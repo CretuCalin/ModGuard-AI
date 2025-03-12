@@ -59,13 +59,14 @@ This application is a serverless chat interface that performs message moderation
 
 ## Technologies Used
 
-TODO
-- **AWS Bedrock** for Large Language Model interactions.
-- **AWS Lambda** for serverless computing.
-- **Amazon API Gateway** to handle HTTP requests.
+- **Python** for backend development with AWS CDK.
+- **HTML/CSS/JavaScript** for the frontend interface.
 - **Amazon S3** for frontend hosting.
 - **Amazon CloudFront** for global content delivery.
-- **HTML/CSS/JavaScript** for the frontend interface.
+- **Amazon Cognito** for user authentication and identity management.
+- **Amazon API Gateway** to handle HTTP requests.
+- **AWS Lambda** for serverless computing.
+- **AWS Bedrock** for Large Language Model interactions.
 
 ---
 
