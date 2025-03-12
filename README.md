@@ -70,16 +70,6 @@ This application is a serverless chat interface that performs message moderation
 
 ---
 
-## Features
-
-TODO
-- **LLM Integration:** Backend service communicates with an LLM on AWS Bedrock to perform [define your task, e.g., sentiment analysis, text generation].
-- **Serverless Architecture:** Fully scalable and cost-effective backend using AWS Lambda.
-- **Simple UI:** Intuitive frontend interface for users to interact with the model.
-- **Security:** Incorporates best practices such as authentication and API protection.
-
----
-
 ## Prerequisites
 
 Before setting up this application, ensure you have the following:
@@ -124,52 +114,29 @@ Before setting up this application, ensure you have the following:
     cdk deploy ModGuardStackBackend
     ```
 
-2. Copy the `ModGuardStackBackend.BedrockApi` variable from the ModGuardStackBackend stack output:
+2. Save output variables from the previous step console logs: 
         
     ```sh
-    # cdk deploy ModGuardStackBackend
-    ModGuardStackBackend.BedrockApi = https://<some_id>.execute-api.eu-west-1.amazonaws.com/prod/
+    # Console logs example
+    ModGuardStackBackend.ModGuardApiEndpoint9C8CED68 = https://gqake4g4t6.execute-api.eu-west-1.amazonaws.com/prod/
+    ModGuardStackBackend.userPoolClientId = 706fc7hi7r73nlpiqmtlgfcgs9
+    ModGuardStackBackend.userPoolId = eu-west-1_TBJgrnzXC
     ```
 
 3. Paste the value in the `frontend/app.js` file:
-        ```js
-        // /frontend/app.js
-        const ApiUrl = "https://<some_id>.execute-api.eu-west-1.amazonaws.com/prod/";
-        ```
+    ```js
+    // In the file: /frontend/app.js
+    const ApiUrl = "<Insert value from ModGuardStackBackend.ModGuardApiEndpoint9C8CED68>";
+
+    // In the file: /frontend/index.js
+    const UserPoolIdValue = "<Insert value from ModGuardStackBackend.userPoolId>";
+    const ClientIdValue = "<Insert value from ModGuardStackBackend.userPoolClientId>";
+    ```
 
 4. Deploy the website stack:
         ```sh
         cdk deploy ModGuardStackWebsite
         ```
----
-
-## Deployment
-
-### Backend
-
-1. **Deploy Lambda Functions & API Gateway:**
-   - Use AWS SAM or Serverless Framework to deploy the Lambda function.
-   - Example using Serverless Framework:
-
-    ```bash
-    sls deploy
-    ```
-
-2. **Configure API Gateway:**
-   - Ensure the API Gateway is connected to the Lambda functions and integrated with AWS Bedrock.
-
-### Frontend
-
-1. **Deploy Frontend:**
-   - Upload the frontend assets to an Amazon S3 bucket.
-
-    ```bash
-    aws s3 sync ./frontend s3://<your-s3-bucket-name> --acl public-read
-    ```
-
-2. **Set Up CloudFront Distribution:**
-   - Create a CloudFront distribution to serve the static assets globally.
-
 ---
 
 ## Usage
