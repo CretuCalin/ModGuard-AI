@@ -25,20 +25,35 @@ This project demonstrates a serverless application designed as a chat moderation
 
 ## LLM tasks definition
 
-The Large Language Model (LLM) is responsible for analyzing chat messages and flagging them into specific moderation categories. When a user wants to send a message in the chat, the LLM processes the message and attempts to identify if it falls into categories such as Cyberbullying Prevention, Age-Inappropriate Content, Personal Information Protection, Stranger Danger and Grooming Detection, Language Filtering and Profanity Control, and Encouraging Negative Communication.
+The Large Language Model (LLM) is responsible for analyzing chat messages and flagging them into specific moderation categories. When a user wants to send a message in the chat, the LLM processes the message and attempts to identify if it falls into the categories:
+- Cyberbullying Prevention
+- Age-Inappropriate Content
+- Personal Information Protection
+- Stranger Danger and Grooming Detection
+- Language Filtering and Profanity Control
+- Encouraging Negative Communication.
 
 ---
 
 ## Architecture
 
-TODO
-The application follows a fully serverless architecture leveraging various AWS services to ensure scalability, availability, and cost-efficiency.
+![AWS architecture](assets/aws_architecture.png)
 
-- **AWS Lambda:** Powers the backend logic, processes API requests, and interacts with AWS Bedrock for LLM functionality.
-- **Amazon API Gateway:** Exposes a secure REST API endpoint for the frontend to communicate with the backend.
-- **AWS Bedrock:** Provides access to pre-trained Large Language Models (LLMs) to perform specific NLP tasks.
-- **Amazon S3:** Used to host static assets for the frontend.
-- **Amazon CloudFront:** Distributes the frontend UI globally with low latency.
+This application is a serverless chat interface that performs message moderation using Large Language Models (LLMs). It leverages AWS services for scalability, security, and real-time processing.
+
+1. **Frontend**:
+   - **Frontend/Website**: The frontend is a simple web application that allows users to interact with the chat interface.
+   - **S3 Bucket**: The S3 bucket stores static website assets (HTML, CSS, JS).
+   - **CloudFront**: CloudFront caches and delivers the frontend assets to users worldwide, ensuring low latency and high performance.
+
+2. **Authorization**:
+   - **Cognito**: AWS Cognito manages user authentication and authorization, ensuring that only authorized users can access the chat application.
+
+3. **Backend**:
+   - **API Gateway**: The frontend communicates with the backend through API Gateway, which exposes RESTful endpoints for interaction with the system.
+   - **Lambda Function**: API Gateway invokes Lambda functions to handle requests. The Lambda function processes chat messages and forwards them for moderation.
+   - **Bedrock**: Amazon Bedrock, integrated with LLMs, performs message moderation by analyzing and processing the content.
+   - **LLM**: The LLM (Large Language Model) returns a moderated response, ensuring compliance with predefined content policies.
 
 ---
 
