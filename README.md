@@ -5,14 +5,12 @@
 - [LLM task definition](#llm-tasks-definition)
 - [Architecture](#architecture)
 - [Technologies Used](#technologies-used)
-- [Features](#features)
+- [User Flow](#user-flow)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Deployment](#deployment)
-- [Usage](#usage)
-- [Security Considerations](#security-considerations)
-- [Cost Optimization](#cost-optimization)
-- [Troubleshooting](#troubleshooting)
+- [Design Choices](#design-choices)
+- [Future Improvements](#future-improvements)
 - [License](#license)
 
 ---
